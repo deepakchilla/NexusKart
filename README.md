@@ -1,37 +1,76 @@
-# HiTeckKart - Premium E-Commerce Platform
+# NexusKart | Premium Full-Stack E-commerce Ecosystem
 
-A production-grade E-Commerce application built with a focus on high-performance architecture, security, and scalability. Designed for SDE interview demonstrations at multi-national corporations (MNCs).
+NexusKart is a sophisticated, end-to-end e-commerce platform engineered for scalability and a premium user experience. Built with a **Spring Boot** backend and a **React.js** frontend, the system prioritizes clean code, secure data handling, and a high-end minimalist design.
 
-## 🚀 Key Technical Highlights (Interview Specs)
+---
 
-### 1. Robust Security Architecture
-*   **Stateful to Stateless Transformation**: Migrated from session-based to **Stateless JWT (JSON Web Token)** authentication.
-*   **Spring Security Integration**: Custom `OncePerRequestFilter` to intercept and validate JWT tokens on every REST call.
-*   **Password Hashing**: Uses **BCrypt** with a strength factor of 12 for secure user credential storage.
-*   **RBAC (Role-Based Access Control)**: Granular permissions for Admins and Customers.
+## 🚀 Key Features
 
-### 2. High-Performance Backend
-*   **API Pagination**: Implemented server-side pagination using `Spring Data Pageable` to handle large catalogs without memory overhead.
-*   **JPA Entity Relationships**: Engineered complex RDBMS mappings (`OneToMany`, `ManyToOne`) between `Users`, `Products`, `Orders`, and `Reviews`.
-*   **Order Management System (OMS)**: Transactional integrity for order placement, including snapshots of product prices and real-time stock reduction.
+*   **Premium Monochrome UI:** A bespoke "Elite" aesthetic focused on high brand clarity and modern UX standards.
+*   **Administrative Management Suite:** A dedicated dashboard for merchants to manage inventory, track orders, and analyze sales performance.
+*   **Stateless Security:** Robust JWT-based authentication system with role-based access control (RBAC).
+*   **Dynamic Product Discovery:** Real-time search, category filtering, and high-performance product data management.
+*   **Seamless Shopping Flow:** Optimized Cart, Checkout, and Payment simulation journeys.
 
-### 3. Scalable Frontend
-*   **Dynamic UI Engine**: Amazon-inspired premium redesign using **Vanilla CSS** and Grid layouts for responsiveness.
-*   **Global State Management**: Powered by **React Context API** for seamless cart and user session handling.
-*   **Axios Interceptors**: Globally managed API security by automatically attaching JWT tokens to outgoing requests.
-*   **Real-time Feedback**: Integrated a dynamic rating system that calculates aggregate scores from global user submissions.
+---
 
-### 4. Quality & Testing
-*   **Automated Testing**: Service-layer unit testing using **JUnit 5** and **Mockito** to ensure business logic reliability.
-*   **Clean Code**: Adheres to SOLID principles and separation of concerns (Controllers -> Services -> Repositories).
+## 🛠️ Technology Stack
 
-## 🛠 Tech Stack
-*   **Backend**: Java 21, Spring Boot 3.3, MySQL, Spring Security, JWT (JJWT).
-*   **Frontend**: React.js, React Router 6, Axios, Bootstrap (Utilities), Vanilla CSS.
-*   **Tools**: Maven, NPM, Git.
+### **Frontend**
+*   **React (Vite):** Core library for building a responsive, reactive UI.
+*   **Context API:** Centralized state management for user authentication and cart persistence.
+*   **Bootstrap 5:** Utility-first styling refined for a professional look.
+*   **Axios:** Asynchronous API communication with a global interceptor.
 
-## 📦 Features
-*   **Product Discovery**: Category-wise browsing, paginated catalog, and keyword search.
-*   **User Experience**: Social reviews with stars, multiple payment method simulations (UPI, Card, COD).
-*   **Admin Suite**: Full product management dashboard (Add, Edit, Delete with image handling).
-*   **Order History**: Permanent account-linked transaction tracking.
+### **Backend**
+*   **Spring Boot:** High-performance RESTful API framework.
+*   **Spring Security (JWT):** Secure, token-based authentication.
+*   **Spring Data JPA:** Efficient database abstraction and management.
+*   **MySQL:** Reliable relational data storage.
+
+---
+
+## � Project Structure
+
+```text
+NexusKart/
+├── Ecommerce-Frontend/   # React.js SPA (Vite)
+└── Ecommerce-Backend/    # Spring Boot REST API
+```
+
+---
+
+## ⚙️ Setup & Installation
+
+### **Prerequisites**
+*   **JDK 17+**
+*   **Node.js 18+**
+*   **MySQL Server**
+
+### **1. Backend Setup**
+1. Navigate to `Ecommerce-Backend/`.
+2. Configure your MySQL credentials in `src/main/resources/application.properties`.
+3. Run the application:
+   ```bash
+   mvn spring-boot:run
+   ```
+
+### **2. Frontend Setup**
+1. Navigate to `Ecommerce-Frontend/`.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+---
+
+## ⚖️ License
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+**Developed with precision for modern e-commerce standards.**
