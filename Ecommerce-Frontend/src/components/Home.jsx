@@ -177,6 +177,27 @@ const Home = () => {
         </aside>
 
         <main id="products">
+          {/* Mobile Category Scroller */}
+          <div className="d-lg-none mb-4 overflow-hidden">
+            <div className="d-flex gap-2 overflow-auto pb-2 category-chips-container" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              <Link
+                to="/"
+                className={`flex-shrink-0 px-4 py-2 rounded-pill text-decoration-none fw-bold small ${!categoryName ? 'bg-dark text-white' : 'bg-light text-muted'}`}
+              >
+                All
+              </Link>
+              {["Laptop", "Headphone", "Mobile", "Electronics", "Toys", "Fashion"].map((cat, index) => (
+                <Link
+                  key={index}
+                  to={`/category/${cat}`}
+                  className={`flex-shrink-0 px-4 py-2 rounded-pill text-decoration-none fw-bold small ${categoryName === cat ? 'bg-dark text-white' : 'bg-light text-muted'}`}
+                >
+                  {cat}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {user?.role === 'ADMIN' && (
             <div className="admin-quick-stats mb-5 p-4 rounded-4 border bg-white shadow-sm">
               <div className="d-flex justify-content-between align-items-center mb-4">

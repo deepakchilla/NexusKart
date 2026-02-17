@@ -1730,3 +1730,63 @@ h6 {
 .tracking-wider {
   letter-spacing: 0.1em;
 }
+
+@media (max-width: 768px) {
+  .hero-wrapper {
+    min-height: 450px !important;
+    padding: 60px 20px !important;
+  }
+
+  .hero-title {
+    font-size: 2.8rem !important;
+  }
+
+  .hero-description {
+    font-size: 1rem !important;
+  }
+
+  .product-main-title {
+    font-size: 1.8rem !important;
+  }
+
+  .product-price-large .amount {
+    font-size: 2.5rem !important;
+  }
+
+  .service-badges-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2.2rem !important;
+  }
+
+  .grid-title {
+    font-size: 1.6rem !important;
+    text-align: center;
+    width: 100%;
+  }
+
+  .premium-grid {
+    gap: 20px;
+  }
+
+  .product-detail-container {
+    padding: 20px 15px !important;
+  }
+}
+
+/* Category Chips Scroller Smoothness */
+.category-chips-container::-webkit-scrollbar {
+  display: none !important;
+}
+
+.category-chips-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
