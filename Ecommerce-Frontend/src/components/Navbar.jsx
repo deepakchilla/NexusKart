@@ -200,7 +200,7 @@ const Navbar = () => {
                   transition: 'all 0.3s ease'
                 }}
               >
-                <i className="bi bi-person-fill" style={{ color: '#ffffff' }}></i>
+                <i className="bi bi-person-fill text-white"></i>
                 Sign In
               </Link>
             )}

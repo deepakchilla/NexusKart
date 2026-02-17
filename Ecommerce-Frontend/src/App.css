@@ -193,8 +193,8 @@ a {
 }
 
 .card h5,
-h3,
-i {
+.card h3,
+.card i {
   color: var(--para-clr) !important;
 }
 
