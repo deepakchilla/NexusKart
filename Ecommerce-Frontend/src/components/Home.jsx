@@ -26,21 +26,10 @@ const Home = () => {
       const response = await axios.get(url);
       const newProducts = response.data.content;
 
-      const productsWithImages = await Promise.all(
-        newProducts.map(async (product) => {
-          try {
-            const imgRes = await axios.get(`/product/${product.id}/image`, { responseType: "blob" });
-            return { ...product, imageUrl: URL.createObjectURL(imgRes.data) };
-          } catch {
-            return { ...product, imageUrl: unplugged };
-          }
-        })
-      );
-
       if (pageNum === 0) {
-        setProducts(productsWithImages);
+        setProducts(newProducts);
       } else {
-        setProducts(prev => [...prev, ...productsWithImages]);
+        setProducts(prev => [...prev, ...newProducts]);
       }
 
       setHasMore(!response.data.last);
@@ -244,7 +233,15 @@ const Home = () => {
                 <div key={product.id} className="product-entity">
                   <Link to={`/product/${product.id}`} className="text-decoration-none">
                     <div className="product-frame">
-                      <img src={product.imageUrl || unplugged} alt={product.name} className="product-image-main" />
+                      <img
+                        src={`http://localhost:8085/api/product/${product.id}/image`}
+                        alt={product.name}
+                        className="product-image-main"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = unplugged;
+                        }}
+                      />
                       {!product.productAvailable && <span className="position-absolute top-0 start-0 m-3 badge bg-dark opacity-75">Out of Stock</span>}
                       {product.price < 5000 && <span className="position-absolute top-0 end-0 m-3 badge bg-white text-dark shadow-sm">Deal</span>}
 

@@ -66,7 +66,7 @@ public class ProductService {
         repo.deleteById(id);
     }
 
-    public List<Product> searchProducts(String keyword) {
+    public java.util.List<java.util.Map<String, Object>> searchProducts(String keyword) {
         return repo.searchProducts(keyword);
     }
 }

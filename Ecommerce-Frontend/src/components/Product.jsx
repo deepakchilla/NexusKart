@@ -18,21 +18,9 @@ const Product = () => {
       try {
         const response = await axios.get(`/product/${id}`);
         setProduct(response.data);
-        if (response.data.imageName) {
-          fetchImage();
-        }
         fetchReviews();
       } catch (error) {
         console.error("Error fetching product:", error);
-      }
-    };
-
-    const fetchImage = async () => {
-      try {
-        const response = await axios.get(`/product/${id}/image`, { responseType: "blob" });
-        setImageUrl(URL.createObjectURL(response.data));
-      } catch (error) {
-        console.error("Error fetching image:", error);
       }
     };
 
@@ -124,7 +112,14 @@ const Product = () => {
       <div className="product-detail-container">
         {/* Left Column: Image */}
         <div className="product-image-viewer shadow-sm">
-          <img src={imageUrl || "/placeholder-image.png"} alt={product.name} />
+          <img
+            src={`http://localhost:8085/api/product/${product.id}/image`}
+            alt={product.name}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/placeholder-image.png";
+            }}
+          />
         </div>
 
         {/* Right Column: Details */}

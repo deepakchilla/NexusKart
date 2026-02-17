@@ -63,6 +63,7 @@ public class Product {
     private String imageType;
     @Lob
     @Column(columnDefinition = "LONGBLOB")
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private byte[] imageDate;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -96,8 +96,8 @@ public class ProductController {
     }
 
     @GetMapping("/products/search")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam String keyword) {
-        List<Product> products = service.searchProducts(keyword);
+    public ResponseEntity<List<java.util.Map<String, Object>>> searchProducts(@RequestParam String keyword) {
+        List<java.util.Map<String, Object>> products = service.searchProducts(keyword);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }
