@@ -114,147 +114,181 @@ const Home = () => {
 
   return (
     <div className="home-page">
-      {user?.role === 'ADMIN' && (
-        <div className="admin-stats-container py-5 px-4 bg-white border-bottom">
-          <div className="container-fluid max-width-xl">
-            <div className="row g-4">
-              <div className="col-md-3">
-                <div className="stat-card p-4 rounded-4 border bg-light shadow-sm transition-all">
-                  <div className="small text-muted mb-1 text-uppercase fw-bold">Active Inventory</div>
-                  <div className="h2 fw-bold mb-0 text-dark">{stats.totalProducts} Items</div>
-                  <div className="badge bg-dark mt-2 border border-white">Operational</div>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="stat-card p-4 rounded-4 border bg-light shadow-sm transition-all">
-                  <div className="small text-muted mb-1 text-uppercase fw-bold">Stock Status</div>
-                  <div className="h2 fw-bold mb-0 text-dark" style={{ color: stats.lowStockCount > 0 ? '#dc3545' : 'inherit' }}>{stats.stockStatus}</div>
-                  <div className="badge bg-dark mt-2">Live Update</div>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="stat-card p-4 rounded-4 border bg-light shadow-sm transition-all">
-                  <div className="small text-muted mb-1 text-uppercase fw-bold">Sales Volume</div>
-                  <div className="h2 fw-bold mb-0 text-dark">₹{Number(stats.totalSales).toLocaleString()}</div>
-                  <div className="badge bg-dark mt-2 border border-white">Real-time</div>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <Link to="/add_product" className="stat-card p-4 rounded-4 border bg-dark text-white shadow-lg d-flex flex-column justify-content-center align-items-center text-decoration-none transition-all h-100">
-                  <i className="bi bi-plus-circle fs-1 mb-2 text-white"></i>
-                  <div className="fw-bold">New Product</div>
-                </Link>
-              </div>
+      {/* Hero Section */}
+      <div className="hero-wrapper">
+        <div className="hero-main">
+          <div className="hero-text">
+            <h1 className="hero-title">Elevate Your Lifestyle.</h1>
+            <p className="hero-description">
+              Experience the pinnacle of technology with our curated collection of premium gadgets.
+              Designed for the modern professional, built for the future.
+            </p>
+            <div className="hero-cta-group">
+              <a href="#products" className="startup-btn-primary text-decoration-none">
+                Shop Collection <i className="bi bi-arrow-right"></i>
+              </a>
+              <Link to="/membership" className="startup-btn-outline text-decoration-none">
+                Join Community
+              </Link>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
-      <div className="amazon-main-container">
-        <div className="category-sidebar">
-          <h5 className="fw-bold mb-3">Shop by Category</h5>
-          <ul className="category-list">
-            {["Laptop", "Headphone", "Mobile", "Electronics", "Toys", "Fashion"].map((cat, index) => (
-              <li key={index}>
-                <Link to={`/category/${cat}`} className={`category-link ${categoryName === cat ? 'fw-bold' : ''} text-decoration-none d-block`} style={categoryName === cat ? { backgroundColor: 'var(--accent-color)', color: '#fff' } : {}}>
-                  {cat}
-                </Link>
-              </li>
-            ))}
-            <li><Link to="/" className="category-link see-all fw-bold">All Categories</Link></li>
-          </ul>
+      {/* Info Bar */}
+      <div className="info-bar">
+        <div className="info-item">
+          <div className="info-icon"><i className="bi bi-truck"></i></div>
+          <div className="info-title">Free Shipping</div>
+          <div className="info-desc">On orders over ₹5,000</div>
         </div>
+        <div className="info-item">
+          <div className="info-icon"><i className="bi bi-shield-check"></i></div>
+          <div className="info-title">2 Year Warranty</div>
+          <div className="info-desc">On all electronics</div>
+        </div>
+        <div className="info-item">
+          <div className="info-icon"><i className="bi bi-chat-dots"></i></div>
+          <div className="info-title">24/7 Support</div>
+          <div className="info-desc">Expert tech assistance</div>
+        </div>
+        <div className="info-item">
+          <div className="info-icon"><i className="bi bi-arrow-repeat"></i></div>
+          <div className="info-title">Easy Returns</div>
+          <div className="info-desc">30-day money back</div>
+        </div>
+      </div>
 
-        <div className="product-area">
-          <div id="products" className="product-section">
-            <div className="section-header border-bottom pb-3 mb-4">
-              <h2 className="fw-bold">{keyword ? 'Search Management' : categoryName ? `${categoryName} Catalog` : 'Warehouse Catalog'}</h2>
-              <p className="text-muted small mb-0">Total of {products.length} entries found</p>
+      {/* Main Content Area */}
+      <div className="app-container">
+        <aside className="d-none d-lg-block">
+          <div className="sidebar-sticky">
+            <h5 className="sidebar-title">Categories</h5>
+            <div className="category-nav">
+              <Link to="/" className={`nav-link-custom ${!categoryName ? 'active' : ''}`}>
+                Collections <i className="bi bi-chevron-right small"></i>
+              </Link>
+              {["Laptop", "Headphone", "Mobile", "Electronics", "Toys", "Fashion"].map((cat, index) => (
+                <Link
+                  key={index}
+                  to={`/category/${cat}`}
+                  className={`nav-link-custom ${categoryName === cat ? 'active' : ''}`}
+                >
+                  {cat} <i className="bi bi-chevron-right small"></i>
+                </Link>
+              ))}
             </div>
 
-            <div className="amazon-product-grid">
-              {products.length === 0 ? (
-                <div className="no-products text-center w-100 py-5">
-                  <img src={unplugged} alt="No Products" style={{ width: '100px', opacity: 0.3 }} />
-                  <p className="mt-3 text-muted">No products found.</p>
-                </div>
-              ) : (
-                products.map((product) => {
-                  const { id, name, price, productAvailable, imageUrl, category, reviews } = product;
-                  const { stars, count } = calculateRating(reviews);
-                  return (
-                    <div key={id} className="amazon-product-card">
-                      <Link to={`/product/${id}`} className="text-decoration-none">
-                        <div className="product-image-container position-relative">
-                          <img src={imageUrl || unplugged} alt={name} className="product-image" />
-                          {productAvailable && price < 1000 && <span className="deal-badge">Deal</span>}
-                        </div>
-                      </Link>
-
-
-
-                      <Link to={`/product/${id}`} className="text-decoration-none text-dark">
-                        <div className="product-details">
-                          <span className="product-category text-muted small">{category}</span>
-                          <h4 className="product-title fw-bold mb-1">{name}</h4>
-                          <div className="product-rating">
-                            <span className="stars">
-                              {[...Array(5)].map((_, i) => (
-                                <span key={i} style={{ color: i < Math.floor(stars) ? '#000000' : '#ddd' }}>★</span>
-                              ))}
-                            </span>
-                            <span className="rating-count ms-1 text-muted">({count > 0 ? count : "0"})</span>
-                          </div>
-                          <div className="product-price-row mt-2">
-                            <span className="currency fw-bold">₹</span>
-                            <span className="price fw-bold fs-5">{price.toLocaleString()}</span>
-                          </div>
-                          <span className="delivery text-dark fw-bold smaller">FREE delivery</span>
-                        </div>
-                      </Link>
-
-                      {user?.role === 'ADMIN' ? (
-                        <div className="admin-actions mt-auto d-flex gap-2">
-                          <Link
-                            to={`/product/update/${id}`}
-                            className="btn btn-dark flex-grow-1 rounded-pill py-2 small fw-bold"
-                          >
-                            Edit
-                          </Link>
-                          <button
-                            className="btn btn-outline-danger rounded-circle p-2 d-flex align-items-center justify-content-center"
-                            style={{ width: '40px', height: '40px' }}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              deleteProduct(id);
-                            }}
-                          >
-                            <i className="bi bi-trash3"></i>
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          className="add-to-cart-btn mt-auto"
-                          disabled={!productAvailable}
-                          onClick={() => addToCart(product)}
-                        >
-                          {productAvailable ? 'Add to Cart' : 'Out of Stock'}
-                        </button>
-                      )}
-                    </div>
-                  );
-                })
-              )}
+            <div className="mt-5 p-4 bg-black text-white rounded-0 shadow-lg mini-banner" style={{ border: '1px solid #333' }}>
+              <h6 className="fw-bold mb-3 text-white" style={{ fontSize: '18px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Nexus Pro</h6>
+              <p className="small text-white mb-4" style={{ lineHeight: '1.6' }}>Get early access to exclusive tech drops and 15% off your first purchase.</p>
+              <Link to="/signup" className="btn btn-light btn-sm w-100 fw-bold rounded-0 py-2 text-uppercase" style={{ letterSpacing: '0.1em', fontSize: '12px' }}>Upgrade Now</Link>
             </div>
-            {hasMore && (
-              <div className="text-center mt-4">
-                <button onClick={loadMore} className="btn btn-outline-dark px-5 py-2 fw-bold rounded-pill">
-                  Load More Products
-                </button>
+          </div>
+        </aside>
+
+        <main id="products">
+          {user?.role === 'ADMIN' && (
+            <div className="admin-quick-stats mb-5 p-4 rounded-4 border bg-white shadow-sm">
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h5 className="fw-bold mb-0">Management Console</h5>
+                <Link to="/add_product" className="btn btn-dark btn-sm rounded-pill px-3">+ Add Item</Link>
               </div>
+              <div className="row g-3">
+                <div className="col-md-4">
+                  <div className="p-3 bg-light rounded-3 border">
+                    <div className="text-muted smaller fw-bold mb-1">REVENUE</div>
+                    <div className="h4 mb-0 fw-bold">₹{Number(stats.totalSales).toLocaleString()}</div>
+                  </div>
+                </div>
+                <div className="col-md-4">
+                  <div className="p-3 bg-light rounded-3 border">
+                    <div className="text-muted smaller fw-bold mb-1">INVENTORY</div>
+                    <div className="h4 mb-0 fw-bold">{stats.totalProducts} Items</div>
+                  </div>
+                </div>
+                <div className="col-md-4">
+                  <div className="p-3 bg-light rounded-3 border">
+                    <div className="text-muted smaller fw-bold mb-1">STATUS</div>
+                    <div className="h4 mb-0 fw-bold text-success">Active</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="grid-header">
+            <div>
+              <div className="text-muted small fw-bold mb-1">EXPLORE</div>
+              <h2 className="grid-title">
+                {keyword ? `Results for "${keyword}"` : categoryName ? `${categoryName}` : 'All Products'}
+              </h2>
+            </div>
+            <div className="d-flex gap-2">
+              <select className="form-select border-0 bg-light rounded-pill px-3 shadow-none small fw-bold" style={{ width: '150px', fontSize: '12px' }}>
+                <option>Sort: Popular</option>
+                <option>Price: Low to High</option>
+                <option>Newest First</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="startup-grid">
+            {products.length === 0 ? (
+              <div className="text-center py-5 w-100">
+                <img src={unplugged} alt="Empty" style={{ width: '80px', opacity: 0.2 }} />
+                <p className="mt-3 text-muted">No items found.</p>
+              </div>
+            ) : (
+              products.map((product) => (
+                <div key={product.id} className="product-entity">
+                  <Link to={`/product/${product.id}`} className="text-decoration-none">
+                    <div className="product-frame">
+                      <img src={product.imageUrl || unplugged} alt={product.name} className="product-image-main" />
+                      {!product.productAvailable && <span className="position-absolute top-0 start-0 m-3 badge bg-dark opacity-75">Out of Stock</span>}
+                      {product.price < 5000 && <span className="position-absolute top-0 end-0 m-3 badge bg-white text-dark shadow-sm">Deal</span>}
+
+                      <div className="action-overlay">
+                        {user?.role === 'ADMIN' ? (
+                          <div className="d-flex gap-2">
+                            <Link to={`/product/update/${product.id}`} className="btn btn-white btn-sm rounded-circle shadow p-2"><i className="bi bi-pencil"></i></Link>
+                            <button onClick={(e) => { e.preventDefault(); deleteProduct(product.id); }} className="btn btn-white btn-sm rounded-circle shadow p-2 text-danger"><i className="bi bi-trash"></i></button>
+                          </div>
+                        ) : (
+                          <button
+                            className="btn btn-dark btn-sm rounded-circle shadow p-2"
+                            disabled={!product.productAvailable}
+                            onClick={(e) => { e.preventDefault(); addToCart(product); }}
+                          >
+                            <i className="bi bi-plus-lg"></i>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+
+                  <div className="product-meta">
+                    <span className="product-cat-label">{product.brand || product.category}</span>
+                    <Link to={`/product/${product.id}`} className="product-name-link">{product.name}</Link>
+                    <div className="product-price-tag">₹{product.price.toLocaleString()}</div>
+                  </div>
+                </div>
+              ))
             )}
           </div>
-        </div>
+
+          {hasMore && (
+            <div className="text-center mt-5">
+              <button
+                onClick={loadMore}
+                className="startup-btn-outline"
+                style={{ fontSize: '14px', padding: '12px 48px' }}
+              >
+                Load More
+              </button>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

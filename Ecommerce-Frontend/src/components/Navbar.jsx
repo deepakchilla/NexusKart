@@ -38,22 +38,37 @@ const Navbar = () => {
     return () => window.removeEventListener('click', closeDropdowns);
   }, []);
 
-  const handleChange = async (value) => {
-    setInput(value);
-    if (value.length >= 1) {
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Debounced search logic
+  useEffect(() => {
+    if (input.length >= 1) {
+      setIsSearching(true);
       setShowSearchResults(true);
-      try {
-        const response = await axios.get(`/products/search?keyword=${value}`);
-        setSearchResults(response.data);
-        setNoResults(response.data.length === 0);
-      } catch (error) {
-        console.error("Error searching:", error);
-      }
+      const delayDebounceFn = setTimeout(async () => {
+        try {
+          // Changed to use the paginated endpoint but with a small size for suggestions
+          const response = await axios.get(`/products?keyword=${input}&page=0&size=5`);
+          setSearchResults(response.data.content || []);
+          setNoResults((response.data.content || []).length === 0);
+        } catch (error) {
+          console.error("Error searching:", error);
+        } finally {
+          setIsSearching(false);
+        }
+      }, 300);
+
+      return () => clearTimeout(delayDebounceFn);
     } else {
       setShowSearchResults(false);
       setSearchResults([]);
       setNoResults(false);
+      setIsSearching(false);
     }
+  }, [input]);
+
+  const handleChange = (value) => {
+    setInput(value);
   };
 
   const handleSearchSubmit = (e) => {
@@ -70,78 +85,70 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg sticky-top" style={{
       zIndex: 1050,
       height: 'var(--header-height)',
-      backgroundColor: 'var(--glass-bg)',
-      backdropFilter: 'blur(16px)',
-      WebkitBackdropFilter: 'blur(16px)',
+      backgroundColor: 'var(--navbar-bg)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
       borderBottom: '1px solid var(--glass-border)'
     }}>
       <div className="container-fluid px-4 px-lg-5">
-        <div className="d-flex align-items-center w-100 position-relative">
+        <div className="d-flex align-items-center justify-content-between w-100">
 
-          <Link className="navbar-brand fw-bold me-2 me-lg-4 d-flex align-items-center" to="/" style={{ color: 'var(--text-primary)', fontSize: '1.4rem', letterSpacing: '-0.03em' }}>
-            Nexus<span style={{ color: 'var(--accent-color)' }}>Kart</span>
+          <Link className="navbar-brand fw-bold d-flex align-items-center" to="/" style={{ color: 'var(--text-primary)', fontSize: '1.5rem', letterSpacing: '-0.06em' }}>
+            NEXUS<span style={{ fontWeight: '400', letterSpacing: '0' }}>KART</span>
           </Link>
 
-          <div className="dropdown d-none d-lg-block me-3" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="btn d-flex align-items-center gap-2 border-0 bg-white shadow-sm rounded-pill px-3 fw-bold"
-              style={{ fontSize: '12px', color: 'var(--text-primary)', height: '44px', border: '1px solid var(--border-color)' }}
-              type="button"
-              onClick={() => setShowCatDropdown(!showCatDropdown)}
-            >
-              Categories
-              <i className="bi bi-chevron-down" style={{ fontSize: '10px' }}></i>
-            </button>
-            <ul className={`dropdown-menu shadow-lg border-0 mt-2 p-2 ${showCatDropdown ? 'show' : ''}`} style={{ borderRadius: '16px', minWidth: '200px', display: showCatDropdown ? 'block' : 'none', backgroundColor: '#ffffff' }}>
-              {categories.map((category) => (
-                <li key={category}>
-                  <Link
-                    className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-medium"
-                    to={`/category/${category}`}
-                    onClick={() => setShowCatDropdown(false)}
-                  >
-                    {category}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="flex-grow-1 mx-2 mx-lg-4">
+          <div className="flex-grow-1 mx-5 d-none d-md-block" style={{ maxWidth: '600px' }}>
             <form className="position-relative" onSubmit={handleSearchSubmit}>
-              <div className="input-group bg-white shadow-sm rounded-pill px-3" style={{ border: '1px solid var(--border-color)', height: '44px' }}>
+              <div className="input-group bg-light rounded-pill px-3 border-0" style={{ height: '48px' }}>
                 <span className="input-group-text bg-transparent border-0 pe-2 d-flex align-items-center">
                   <i className="bi bi-search text-muted" style={{ fontSize: '14px' }}></i>
                 </span>
                 <input
                   type="text"
-                  className="form-control bg-transparent border-0 shadow-none ps-0"
-                  placeholder="Search over 10,000+ tech products..."
-                  style={{ fontSize: '14px', fontWeight: '500' }}
+                  className="form-control bg-transparent border-0 shadow-none ps-0 fw-medium"
+                  placeholder="Search curated gadgets..."
+                  style={{ fontSize: '14px' }}
                   value={input}
                   onChange={(e) => handleChange(e.target.value)}
                   onFocus={() => setShowSearchResults(input.length > 0)}
-                  onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
                 />
               </div>
 
-              {showSearchResults && (
-                <div className="position-absolute w-100 mt-2 shadow-lg bg-white overflow-hidden border-0" style={{ zIndex: 1100, borderRadius: '18px' }}>
-                  {noResults ? (
-                    <div className="p-4 text-center text-muted small">No items found for "{input}"</div>
+              {showSearchResults && input.length >= 1 && (
+                <div className="search-suggestions-container shadow-sm">
+                  {isSearching ? (
+                    <div className="p-3 text-center">
+                      <div className="spinner-border spinner-border-sm text-muted opacity-50" role="status"></div>
+                    </div>
+                  ) : noResults ? (
+                    <div className="p-3 text-muted small">No results found for "{input}"</div>
                   ) : (
                     <div className="list-group list-group-flush">
-                      {searchResults.slice(0, 6).map((result) => (
+                      {searchResults.map((result) => (
                         <Link
                           key={result.id}
                           to={`/product/${result.id}`}
-                          className="list-group-item list-group-item-action border-0 py-3 px-4 d-flex align-items-center gap-3 transition-all"
+                          className="list-group-item list-group-item-action border-0 d-flex align-items-center py-2 px-3 suggestion-item"
                           onClick={() => setShowSearchResults(false)}
                         >
-                          <div className="bg-light rounded-circle p-2 d-flex align-items-center justify-content-center">
-                            <i className="bi bi-lightning-fill text-dark" style={{ fontSize: '12px' }}></i>
+                          <div className="suggestion-icon">
+                            <img
+                              src={`http://localhost:8085/api/product/${result.id}/image`}
+                              alt=""
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://via.placeholder.com/40?text=P";
+                              }}
+                            />
                           </div>
-                          <span className="small fw-semibold text-dark">{result.name}</span>
+                          <div className="suggestion-text">
+                            <span className="query-match">{input}</span>
+                            <span className="suggestion-remainder">
+                              {result.name.toLowerCase().startsWith(input.toLowerCase())
+                                ? result.name.substring(input.length)
+                                : ` in ${result.name}`}
+                            </span>
+                          </div>
                         </Link>
                       ))}
                     </div>
@@ -151,37 +158,36 @@ const Navbar = () => {
             </form>
           </div>
 
-          <div className="d-flex align-items-center gap-3 gap-lg-4 ms-2 flex-shrink-0">
+          <div className="d-flex align-items-center gap-4">
             {user ? (
               <div className="dropdown" onClick={(e) => e.stopPropagation()}>
                 <button
-                  className="btn d-flex align-items-center gap-2 p-0 border-0"
+                  className="btn d-flex align-items-center gap-3 p-0 border-0"
                   type="button"
                   onClick={() => setShowUserDropdown(!showUserDropdown)}
                 >
-                  <div className="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style={{ width: '38px', height: '38px', fontSize: '14px' }}>
+                  <div className="text-end d-none d-md-block">
+                    <div className="fw-bold text-dark" style={{ fontSize: '14px' }}>{user.name?.split(' ')[0] || 'Member'}</div>
+                    <div className="text-muted" style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase' }}>{user.role}</div>
+                  </div>
+                  <div className="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style={{ width: '40px', height: '40px', fontSize: '14px' }}>
                     {user.name?.charAt(0).toUpperCase()}
                   </div>
-                  <div className="text-start d-none d-md-block">
-                    <div className="text-muted" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '700' }}>MY PROFILE</div>
-                    <div className="fw-bold text-dark" style={{ fontSize: '14px', lineHeight: '1.2' }}>{user.name?.split(' ')[0] || 'User'}</div>
-                  </div>
                 </button>
-                <ul className={`dropdown-menu shadow-lg border-0 mt-3 p-2 ${showUserDropdown ? 'show' : ''}`} style={{ borderRadius: '16px', minWidth: '220px', display: showUserDropdown ? 'block' : 'none', backgroundColor: '#ffffff', left: '50%', transform: 'translateX(-50%)', right: 'auto' }}>
-                  <li className="px-3 py-2 mb-2 d-md-none border-bottom">
-                    <p className="mb-0 small fw-bold text-dark">{user.name}</p>
-                    <p className="mb-0 smaller text-muted">{user.role}</p>
+                <ul className={`dropdown-menu dropdown-menu-end shadow-2xl border-0 mt-3 p-2 ${showUserDropdown ? 'show' : ''}`} style={{ borderRadius: '20px', minWidth: '240px', display: showUserDropdown ? 'block' : 'none' }}>
+                  <li className="px-3 py-3 mb-2 border-bottom">
+                    <div className="fw-bold text-dark">{user.name}</div>
+                    <div className="small text-muted">{user.email || 'Verified Member'}</div>
                   </li>
-                  <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-medium" to="/profile" onClick={() => setShowUserDropdown(false)}><i className="bi bi-person me-2 fs-6"></i> Account Details</Link></li>
+                  <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold" to="/profile" onClick={() => setShowUserDropdown(false)}><i className="bi bi-gear me-2"></i> Settings</Link></li>
                   {user.role === 'ADMIN' && (
-                    <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold" to="/admin" onClick={() => setShowUserDropdown(false)}><i className="bi bi-speedometer2 me-2 fs-6"></i> Admin Dashboard</Link></li>
+                    <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold text-primary" to="/admin" onClick={() => setShowUserDropdown(false)}><i className="bi bi-cpu me-2"></i> Admin Panel</Link></li>
                   )}
-                  <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-medium" to={user.role === 'ADMIN' ? "/admin/orders" : "/orders"} onClick={() => setShowUserDropdown(false)}><i className="bi bi-bag me-2 fs-6"></i> Orders</Link></li>
-                  <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-medium" to="/profile" onClick={() => setShowUserDropdown(false)}><i className="bi bi-gear me-2 fs-6"></i> Settings</Link></li>
+                  <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold" to={user.role === 'ADMIN' ? "/admin/orders" : "/orders"} onClick={() => setShowUserDropdown(false)}><i className="bi bi-box-seam me-2"></i> Orders</Link></li>
                   <li><hr className="dropdown-divider opacity-10 mx-2 my-2" /></li>
                   <li>
                     <button className="dropdown-item rounded-3 py-2 px-3 small text-danger fw-bold d-flex align-items-center gap-2" onClick={() => { logout(); setShowUserDropdown(false); }}>
-                      <i className="bi bi-box-arrow-right"></i> Sign Out
+                      <i className="bi bi-power"></i> Sign Out
                     </button>
                   </li>
                 </ul>
@@ -189,33 +195,21 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/login"
-                className="btn btn-dark rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2"
-                style={{
-                  fontSize: '14px',
-                  backgroundColor: '#000000',
-                  color: '#ffffff',
-                  border: '1px solid #000000',
-                  padding: '10px 24px',
-                  textDecoration: 'none',
-                  transition: 'all 0.3s ease'
-                }}
+                className="startup-btn-primary py-2 px-4 shadow-none"
+                style={{ fontSize: '13px' }}
               >
-                <i className="bi bi-person-fill text-white"></i>
                 Sign In
               </Link>
             )}
 
             {user?.role !== 'ADMIN' && (
-              <Link to="/cart" className="text-decoration-none d-flex align-items-center gap-2 px-2 py-1 position-relative group" style={{ color: 'var(--text-primary)' }}>
-                <div className="position-relative">
-                  <i className="bi bi-cart3 fs-4"></i>
-                  {totalItems > 0 && (
-                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger border border-2 border-white" style={{ fontSize: '10px', padding: '0.4em 0.5em', minWidth: '18px', height: '18px' }}>
-                      {totalItems}
-                    </span>
-                  )}
-                </div>
-                <span className="d-none d-md-inline fw-bold small">Cart</span>
+              <Link to="/cart" className="text-decoration-none d-flex align-items-center position-relative" style={{ color: 'var(--text-primary)' }}>
+                <i className="bi bi-handbag fs-4"></i>
+                {totalItems > 0 && (
+                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-dark" style={{ fontSize: '9px', minWidth: '18px', height: '18px' }}>
+                    {totalItems}
+                  </span>
+                )}
               </Link>
             )}
           </div>

@@ -1,148 +1,181 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from '../axios';
 
 const Footer = () => {
+    const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [subscribed, setSubscribed] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleSubscribe = async (e) => {
+        e.preventDefault();
+        if (!email) return;
+
+        setIsLoading(true);
+        setError('');
+
+        try {
+            await axios.post('/newsletter/subscribe', { email });
+            setSubscribed(true);
+            setEmail('');
+        } catch (err) {
+            console.error('Subscription error:', err);
+            const data = err.response?.data;
+            const errorMessage = typeof data === 'object' ? data.message : (data || 'Something went wrong');
+            setError(errorMessage);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     return (
-        <footer className="footer-premium" style={{ backgroundColor: "#f5f5f7", color: "#1d1d1f", fontFamily: "'Inter', sans-serif" }}>
-            {/* Back to Top bar - Mid Gray */}
-            <div
-                onClick={scrollToTop}
-                className="text-center py-3 w-100 transition-all border-bottom"
-                style={{
-                    backgroundColor: "#e5e7eb",
-                    color: "#4b5563",
-                    cursor: "pointer",
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    transition: "all 0.3s"
-                }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#d1d5db"}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e5e7eb"}
-            >
-                Back to top
-            </div>
-
-            {/* Main Content - Uniform Gray */}
-            <div className="container-fluid px-lg-5 py-5">
-                <div className="container">
-                    <div className="row g-4">
-                        {/* Newsletter Signup */}
-                        <div className="col-lg-4 col-md-12 mb-4 mb-lg-0">
-                            <h5 className="fw-bold mb-3" style={{ color: "#1d1d1f" }}>Stay Updated</h5>
-                            <p className="small mb-4" style={{ color: "#6e6e73", lineHeight: "1.6" }}>
-                                Subscribe to get notified about the latest tech deals and exclusive member offers.
-                            </p>
-                            <div className="input-group mb-4" style={{ maxWidth: "340px" }}>
-                                <input
-                                    type="text"
-                                    className="form-control border px-3 bg-white"
-                                    placeholder="your-email@example.com"
-                                    style={{ borderRadius: "8px 0 0 8px", fontSize: "14px", height: "45px", borderColor: "#d2d2d7" }}
-                                />
-                                <button
-                                    className="btn fw-bold px-4 text-white border-0"
-                                    style={{ backgroundColor: "var(--accent-color)", borderRadius: "0 8px 8px 0", height: "45px" }}
-                                >
-                                    Subscribe
-                                </button>
-                            </div>
-                            {/* Social Icons - Premium Dark Icons on Gray */}
-                            <div className="d-flex gap-3 mt-2">
-                                {['facebook', 'twitter-x', 'instagram', 'linkedin'].map((social) => (
-                                    <Link key={social} to="#" className="social-icon-box">
-                                        <i className={`bi bi-${social}`}></i>
-                                    </Link>
-                                ))}
-                            </div>
+        <footer className="footer-light py-5 mt-5" style={{ backgroundColor: '#ffffff', color: '#000000', borderTop: '1px solid #f0f0f0', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <div className="container-fluid px-lg-5">
+                <div className="row g-5 align-items-start">
+                    {/* Brand & Mission */}
+                    <div className="col-lg-4">
+                        <Link className="navbar-brand fw-bold mb-4 d-block" to="/" style={{ color: '#000000', fontSize: '1.6rem', letterSpacing: '-0.06em' }}>
+                            NEXUS<span style={{ fontWeight: '400' }}>KART</span>
+                        </Link>
+                        <p className="mb-4 pe-lg-5" style={{ color: '#525252', lineHeight: '1.7', fontSize: '0.95rem' }}>
+                            Redefining the digital shopping experience through curated technology and minimalist design.
+                            We bridge the gap between innovation and everyday utility.
+                        </p>
+                        <div className="d-flex gap-3">
+                            {['twitter-x', 'instagram', 'linkedin', 'github'].map((social) => (
+                                <Link key={social} to="#" className="social-icon-box-light">
+                                    <i className={`bi bi-${social}`}></i>
+                                </Link>
+                            ))}
                         </div>
+                    </div>
 
-                        {/* Navigation Columns */}
-                        <div className="col-lg-8 col-md-12">
-                            <div className="row g-4">
-                                <div className="col-md-4 col-12">
-                                    <h6 className="fw-bold mb-3" style={{ color: "#1d1d1f" }}>Let Us Help You</h6>
-                                    <ul className="list-unstyled d-flex flex-column gap-2">
-                                        <li><Link to="/profile" className="nav-link-gray">Your Account</Link></li>
-                                        <li><Link to="/orders" className="nav-link-gray">Returns Centre</Link></li>
-                                        <li><Link to="/membership" className="nav-link-gray">Prime Membership</Link></li>
-                                        <li><Link to="#" className="nav-link-gray">Help Centre</Link></li>
-                                    </ul>
-                                </div>
+                    {/* Navigation Links */}
+                    <div className="col-lg-4 col-md-12">
+                        <div className="row g-4">
+                            <div className="col-6">
+                                <h6 className="text-dark text-uppercase small fw-bold mb-4" style={{ letterSpacing: '0.15em' }}>Navigation</h6>
+                                <ul className="list-unstyled d-flex flex-column gap-3">
+                                    <li><Link to="/" className="footer-link">Home</Link></li>
+                                    <li><Link to="/category/Laptop" className="footer-link">Laptops</Link></li>
+                                    <li><Link to="/category/Mobile" className="footer-link">Mobile</Link></li>
+                                    <li><Link to="/category/Electronics" className="footer-link">Electronics</Link></li>
+                                </ul>
+                            </div>
+                            <div className="col-6">
+                                <h6 className="text-dark text-uppercase small fw-bold mb-4" style={{ letterSpacing: '0.15em' }}>Company</h6>
+                                <ul className="list-unstyled d-flex flex-column gap-3">
+                                    <li><Link to="/profile" className="footer-link">Profile</Link></li>
+                                    <li><Link to="/orders" className="footer-link">Orders</Link></li>
+                                    <li><Link to="/membership" className="footer-link">Membership</Link></li>
+                                    <li><Link to="#" className="footer-link">Privacy Policy</Link></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {/* Middle Section - Uniform Light Gray */}
-            <div className="py-5 border-top border-bottom" style={{ borderColor: "#d2d2d7" }}>
-                <div className="container text-center">
-                    <Link to="/" className="text-decoration-none d-inline-block mb-4">
-                        <h3 className="fw-bold mb-0" style={{ color: "#1d1d1f", letterSpacing: "-1px" }}>
-                            Nexus<span style={{ color: "var(--accent-color)" }}>Kart</span>
-                        </h3>
-                    </Link>
-                    <div className="d-flex flex-wrap justify-content-center gap-3">
-                        <button className="btn btn-sm btn-outline-dark px-4 py-2 rounded-2" style={{ borderColor: "#d2d2d7", fontSize: "13px" }}>🌐 English</button>
-                        <button className="btn btn-sm btn-outline-dark px-4 py-2 rounded-2" style={{ borderColor: "#d2d2d7", fontSize: "13px" }}>🇮🇳 India</button>
-                        <button className="btn btn-sm btn-outline-dark px-4 py-2 rounded-2" style={{ borderColor: "#d2d2d7", fontSize: "13px" }}>Currency: INR</button>
+                    {/* Newsletter & Meta */}
+                    <div className="col-lg-4">
+                        <h6 className="text-dark text-uppercase small fw-bold mb-4" style={{ letterSpacing: '0.15em' }}>Newsletter</h6>
+
+                        {subscribed ? (
+                            <div className="newsletter-success p-4 rounded-4" style={{ background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+                                <i className="bi bi-patch-check-fill text-success fs-4 mb-2 d-block"></i>
+                                <h6 className="fw-bold text-success mb-1">Check your inbox!</h6>
+                                <p className="smaller text-success mb-0 opacity-75">You've been successfully added to the NexusKart circle.</p>
+                            </div>
+                        ) : (
+                            <>
+                                <p className="small mb-4" style={{ color: '#525252' }}>Join 5,000+ tech visionaries. No spam, only innovation.</p>
+                                <form onSubmit={handleSubscribe} className="newsletter-wrapper p-1 rounded-pill" style={{ background: '#f8f8f8', border: '1px solid #eeeeee' }}>
+                                    <div className="input-group">
+                                        <input
+                                            type="email"
+                                            className="form-control bg-transparent border-0 text-dark shadow-none ps-3"
+                                            placeholder="your@email.com"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            style={{ fontSize: '14px' }}
+                                            required
+                                        />
+                                        <button
+                                            className="btn btn-dark rounded-pill px-4 fw-bold"
+                                            style={{ fontSize: '13px' }}
+                                            disabled={isLoading}
+                                        >
+                                            {isLoading ? '...' : 'Join'}
+                                        </button>
+                                    </div>
+                                </form>
+                                {error && <p className="smaller text-danger mt-2 ms-2">{error}</p>}
+                            </>
+                        )}
+
+                        <div className="mt-4 d-flex align-items-center gap-2">
+                            <div className="status-dot"></div>
+                            <span className="smaller" style={{ color: '#a3a3a3' }}>Systems Operational</span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Final Legal Section */}
-            <div className="py-4">
-                <div className="container">
-                    <p className="text-center mb-0" style={{ fontSize: "12px", color: "#6e6e73" }}>
-                        © 2010-2026, NexusKart.com, Inc. or its affiliates
-                    </p>
+                <div className="mt-5 pt-4 border-top" style={{ borderColor: '#f0f0f0' }}>
+                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                        <p className="smaller mb-0" style={{ color: '#a3a3a3' }}>
+                            © 2026 NEXUSKART SYSTEMS. ALL RIGHTS RESERVED.
+                        </p>
+                        <div className="d-flex gap-4">
+                            <span className="smaller text-uppercase fw-bold" style={{ color: '#e5e5e5', letterSpacing: '0.1em' }}>Premium Ecommerce</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <style>{`
-                .nav-link-gray {
-                    color: #4b5563;
+                .footer-link {
+                    color: #525252;
                     text-decoration: none;
-                    font-size: 14px;
-                    transition: color 0.2s;
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
                 }
-                .nav-link-gray:hover {
-                    color: var(--accent-color);
+                .footer-link:hover {
+                    color: #000000;
+                    padding-left: 5px;
                 }
-                .legal-link-gray {
-                    color: #6e6e73;
-                    text-decoration: none;
-                }
-                .legal-link-gray:hover {
-                    color: var(--accent-color);
-                    text-decoration: underline;
-                }
-                .social-icon-box {
-                    width: 42px;
-                    height: 42px;
-                    background-color: #ffffff;
+                .social-icon-box-light {
+                    width: 40px;
+                    height: 40px;
+                    background: #ffffff;
+                    border: 1px solid #eeeeee;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    border-radius: 50%;
-                    color: #1d1d1f !important;
-                    font-size: 18px;
+                    border-radius: 10px;
+                    color: #525252;
+                    font-size: 1.1rem;
                     text-decoration: none;
                     transition: all 0.3s ease;
-                    border: 1px solid #d2d2d7;
                 }
-                .social-icon-box:hover {
-                    background-color: var(--accent-color);
-                    color: #ffffff !important;
-                    border-color: var(--accent-color);
+                .social-icon-box-light:hover {
+                    border-color: #000000;
+                    color: #000000;
                     transform: translateY(-3px);
                 }
+                .smaller { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; }
+                .status-dot {
+                    width: 6px;
+                    height: 6px;
+                    background: #22c55e;
+                    border-radius: 50%;
+                    box-shadow: 0 0 8px #22c55e;
+                }
             `}</style>
-        </footer>
+        </footer >
     );
 };
 

@@ -128,24 +128,26 @@ const Product = () => {
         </div>
 
         {/* Right Column: Details */}
-        <div className="product-info-column">
-          <nav className="breadcrumb-nav mb-2">
-            <Link to="/">Home</Link>
-            <span>›</span>
-            <Link to={`/category/${product.category}`}>{product.category}</Link>
+        <div className="product-info-column" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+          <nav className="breadcrumb-nav mb-3 d-flex align-items-center gap-1" style={{ fontSize: '12px', letterSpacing: '0.02em', textTransform: 'uppercase', fontWeight: '700' }}>
+            <Link to="/" className="text-muted text-decoration-none">Home</Link>
+            <i className="bi bi-chevron-right text-muted" style={{ fontSize: '10px' }}></i>
+            <Link to={`/category/${product.category}`} className="text-dark text-decoration-none">{product.category}</Link>
           </nav>
 
           <h1 className="product-main-title">{product.name}</h1>
-          <Link to="/" className="product-brand-link">Visit the {product.brand} Store</Link>
+          <div className="mb-4">
+            <Link to="/" className="text-muted text-decoration-none small fw-bold" style={{ borderBottom: '1px solid #eee' }}>Visit the {product.brand} Official Store</Link>
+          </div>
 
-          <div className="product-rating-row">
-            <div className="stars">
+          <div className="product-rating-row mb-4 d-flex align-items-center gap-3">
+            <div className="stars d-flex gap-1">
               {[...Array(5)].map((_, i) => (
-                <span key={i} style={{ color: i < Math.floor(avgRating) ? '#000000' : '#ddd' }}>★</span>
+                <i key={i} className="bi bi-star-fill" style={{ color: i < Math.floor(avgRating) ? '#000000' : '#e5e5e5', fontSize: '14px' }}></i>
               ))}
             </div>
-            <span className="rating-count">{avgRating} / 5.0</span>
-            <span className="text-muted small">| {reviews.length} customer reviews</span>
+            <span className="fw-800 small text-dark">{avgRating}</span>
+            <span className="text-muted smaller fw-bold text-uppercase" style={{ letterSpacing: '0.05em' }}>/ {reviews.length} Verified Reviews</span>
           </div>
 
           <div className="product-price-section">
@@ -153,45 +155,53 @@ const Product = () => {
               <span className="currency">₹</span>
               <span className="amount">{product.price.toLocaleString()}</span>
               {product.productAvailable && (
-                <span className="delivery-badge ms-3">FREE Delivery</span>
+                <span className="delivery-badge">FREE SHIPPING</span>
               )}
             </div>
-            <p className="text-muted small mt-1">Inclusive of all taxes</p>
           </div>
 
           {/* Offers Section */}
           <div className="product-offers-container">
-            <div className="offer-card shadow-sm">
-              <span className="offer-title text-dark"><i className="bi bi-tag-fill me-1"></i> Bank Offer</span>
-              <p className="mb-0">Upto ₹1,500.00 discount on select Credit Cards</p>
+            <div className="offer-card">
+              <i className="bi bi-tag-fill"></i>
+              <div className="offer-content">
+                <span className="offer-title">Bank Offer</span>
+                <p className="mb-0 small text-muted">Upto ₹1,500.00 discount on select Credit Cards</p>
+              </div>
             </div>
-            <div className="offer-card shadow-sm">
-              <span className="offer-title text-dark"><i className="bi bi-percent me-1"></i> No Cost EMI</span>
-              <p className="mb-0">Upto ₹2,300.00 EMI interest savings</p>
+            <div className="offer-card">
+              <i className="bi bi-percent"></i>
+              <div className="offer-content">
+                <span className="offer-title">No Cost EMI</span>
+                <p className="mb-0 small text-muted">Upto ₹2,300.00 EMI interest savings</p>
+              </div>
             </div>
-            <div className="offer-card shadow-sm">
-              <span className="offer-title text-dark"><i className="bi bi-box-seam me-1"></i> Partner Offers</span>
-              <p className="mb-0">Get GST invoice and save up to 28%</p>
+            <div className="offer-card">
+              <i className="bi bi-box-seam"></i>
+              <div className="offer-content">
+                <span className="offer-title">Partner Offers</span>
+                <p className="mb-0 small text-muted">Get GST invoice and save up to 28%</p>
+              </div>
             </div>
           </div>
 
           {/* Service Badges */}
           <div className="service-badges-row">
             <div className="service-badge-item">
-              <i className="bi bi-arrow-return-left"></i>
-              <span>7 days<br />Replacement</span>
+              <i className="bi bi-arrow-counterclockwise"></i>
+              <span>7 Days Return</span>
             </div>
             <div className="service-badge-item">
               <i className="bi bi-truck"></i>
-              <span>Free<br />Delivery</span>
+              <span>Free Delivery</span>
             </div>
             <div className="service-badge-item">
               <i className="bi bi-patch-check"></i>
-              <span>1 Year<br />Warranty</span>
+              <span>1 Yr Warranty</span>
             </div>
             <div className="service-badge-item">
               <i className="bi bi-shield-check"></i>
-              <span>Top<br />Brand</span>
+              <span>Nexus Guard</span>
             </div>
           </div>
 
@@ -234,43 +244,53 @@ const Product = () => {
             </table>
           </div>
 
-          <div className="product-actions-card bg-white shadow-sm mt-4">
+          <div className="product-actions-card bg-white mt-4">
             <div className={`stock-status ${product.productAvailable ? 'in-stock' : 'out-of-stock'}`}>
-              {product.productAvailable ? 'In Stock' : 'Currently Unavailable'}
+              {product.productAvailable ? (
+                <><i className="bi bi-check-circle-fill me-2"></i> In Stock and ready to ship</>
+              ) : (
+                <><i className="bi bi-x-circle-fill me-2"></i> Currently Unavailable</>
+              )}
             </div>
 
-            <p className="small mb-3">
-              Ships from <b>NexusKart Store</b><br />
-              Sold by <b>NexusKart Solutions</b>
-            </p>
+            <div className="mb-4 small text-muted">
+              <div className="d-flex justify-content-between mb-1">
+                <span>Ships from</span>
+                <span className="text-dark fw-bold">NexusKart Premiere</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span>Sold by</span>
+                <span className="text-dark fw-bold">NexusKart Official Store</span>
+              </div>
+            </div>
 
             {user?.role !== 'ADMIN' ? (
               <>
                 {product.productAvailable && (
                   <div className="quantity-selector-row">
-                    <span className="small fw-bold">Quantity:</span>
+                    <span className="small fw-bold text-uppercase" style={{ letterSpacing: '0.05em' }}>Quantity</span>
                     <select
                       className="qty-dropdown"
                       value={quantity}
                       onChange={(e) => setQuantity(parseInt(e.target.value))}
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
-                        <option key={num} value={num}>{num}</option>
+                        <option key={num} value={num}>{num >= 10 ? num : `0${num}`}</option>
                       ))}
                     </select>
                   </div>
                 )}
 
-                <div className="d-grid gap-2">
+                <div className="d-grid gap-3">
                   <button
-                    className="add-to-cart-btn py-2"
+                    className="startup-btn-primary w-100 justify-content-center py-3"
                     disabled={!product.productAvailable}
                     onClick={handleAddToCart}
                   >
-                    Add to Cart
+                    <i className="bi bi-bag-plus me-2"></i> Add to Cart
                   </button>
                   <button
-                    className="buy-now-btn py-2"
+                    className="startup-btn-outline w-100 justify-content-center py-3"
                     disabled={!product.productAvailable}
                     onClick={handleBuyNow}
                   >
@@ -279,29 +299,29 @@ const Product = () => {
                 </div>
               </>
             ) : (
-              <div className="p-3 rounded-3 border text-center mb-3" style={{ backgroundColor: '#f9f9fb', borderColor: '#e4e4e7' }}>
-                <i className="bi bi-shield-lock-fill d-block fs-4 mb-2 text-dark"></i>
-                <div className="fw-bold small text-dark">Administrative View</div>
-                <div className="smaller text-muted">Shopping disabled for management</div>
+              <div className="administrative-banner">
+                <i className="bi bi-shield-lock d-block fs-3 mb-3 text-dark"></i>
+                <div className="fw-800 small text-dark text-uppercase mb-1" style={{ letterSpacing: '0.1em' }}>Administrative View</div>
+                <div className="smaller text-muted">Shopping interface disabled for staff</div>
               </div>
             )}
 
             {user?.role === 'ADMIN' && (
-              <div className="admin-actions-section mt-3 pt-3 border-top">
+              <div className="admin-actions-section mt-4 pt-4 border-top">
                 <div className="d-grid gap-2">
-                  <Link to={`/product/update/${id}`} className="btn btn-outline-dark btn-sm py-2 fw-bold">
-                    <i className="bi bi-pencil-square me-2"></i>Edit Product Details
+                  <Link to={`/product/update/${id}`} className="startup-btn-outline w-100 justify-content-center btn-sm py-2">
+                    <i className="bi bi-pencil-square me-2"></i>Edit Product
                   </Link>
-                  <button onClick={deleteProduct} className="btn btn-outline-danger btn-sm py-2 fw-bold">
-                    <i className="bi bi-trash-fill me-2"></i>Delete This Product
+                  <button onClick={deleteProduct} className="btn btn-link text-danger text-decoration-none small fw-bold mt-2">
+                    <i className="bi bi-trash3 me-2"></i>Delete Product
                   </button>
                 </div>
               </div>
             )}
 
-            <div className="mt-3 d-flex align-items-center gap-2 small">
-              <i className="bi bi-lock-fill text-muted"></i>
-              <span className="text-muted">Secure transaction</span>
+            <div className="mt-4 pt-3 d-flex align-items-center justify-content-center gap-2 smaller text-muted border-top border-light">
+              <i className="bi bi-shield-check"></i>
+              <span>Secure checkout enabled</span>
             </div>
           </div>
         </div>
@@ -318,9 +338,9 @@ const Product = () => {
                 <span className="big-rating-number">{avgRating}</span>
                 <span className="text-muted">out of 5</span>
               </div>
-              <div className="global-rating-stars">
+              <div className="global-rating-stars d-flex gap-1 mb-2">
                 {[...Array(5)].map((_, i) => (
-                  <span key={i} style={{ color: i < Math.floor(avgRating) ? '#000000' : '#ddd' }}>★</span>
+                  <i key={i} className="bi bi-star-fill" style={{ color: i < Math.floor(avgRating) ? '#000000' : '#e0e0e0', fontSize: '20px' }}></i>
                 ))}
               </div>
               <p className="text-muted small mb-4">{reviews.length} global ratings</p>
@@ -340,7 +360,7 @@ const Product = () => {
                           checked={newReview.rating === num}
                           onChange={(e) => setNewReview({ ...newReview, rating: parseInt(e.target.value) })}
                         />
-                        <label htmlFor={`star${num}`}>★</label>
+                        <label htmlFor={`star${num}`}><i className="bi bi-star-fill"></i></label>
                       </React.Fragment>
                     ))}
                   </div>
@@ -373,9 +393,9 @@ const Product = () => {
                     <span className="review-username">{review.userName || "Verified Customer"}</span>
                   </div>
                   <div className="d-flex align-items-center mb-2">
-                    <div className="review-rating-stars">
+                    <div className="review-rating-stars d-flex gap-1 me-2">
                       {[...Array(5)].map((_, i) => (
-                        <span key={i} style={{ color: i < review.rating ? '#000000' : '#ddd' }}>★</span>
+                        <i key={i} className="bi bi-star-fill" style={{ color: i < review.rating ? '#000000' : '#e0e0e0', fontSize: '12px' }}></i>
                       ))}
                     </div>
                     <span className="small text-muted">Verified Purchase</span>

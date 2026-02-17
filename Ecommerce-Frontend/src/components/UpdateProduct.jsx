@@ -77,29 +77,29 @@ const UpdateProduct = () => {
   };
 
   return (
-    <div className="update-product-page">
+    <div className="update-product-page py-5" style={{ backgroundColor: "#ffffff", minHeight: "calc(100vh - 80px)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-lg-8">
-            <div className="card border-0 shadow-sm p-4 p-md-5" style={{ borderRadius: '15px' }}>
-              <div className="d-flex align-items-center gap-3 mb-4">
+            <div className="p-4 p-md-5">
+              <div className="d-flex align-items-center gap-3 mb-5">
                 <button
                   onClick={() => navigate('/admin')}
-                  className="btn btn-light rounded-circle d-flex align-items-center justify-content-center"
-                  style={{ width: '40px', height: '40px' }}
+                  className="btn btn-outline-dark rounded-circle d-flex align-items-center justify-content-center"
+                  style={{ width: '42px', height: '42px', border: '1px solid #e5e5e5' }}
                 >
                   <i className="bi bi-arrow-left"></i>
                 </button>
-                <h2 className="fw-bold mb-0">Update Product</h2>
+                <h1 className="fw-800 mb-0" style={{ letterSpacing: '-0.04em' }}>Update Product</h1>
               </div>
 
               <form onSubmit={handleSubmit}>
                 <div className="row g-4">
                   <div className="col-md-6">
-                    <label className="form-label fw-bold small text-muted text-uppercase">Product Name</label>
+                    <label className="form-label fw-bold small text-muted text-uppercase" style={{ letterSpacing: '0.1em' }}>Product Name</label>
                     <input
                       type="text"
-                      className="form-control rounded-3 py-2 px-3 border-secondary-subtle shadow-none"
+                      className="form-control rounded-3 py-3 px-3 border-light-subtle shadow-none"
                       name="name"
                       value={updateProduct.name}
                       onChange={handleChange}
@@ -107,10 +107,10 @@ const UpdateProduct = () => {
                     />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label fw-bold small text-muted text-uppercase">Brand</label>
+                    <label className="form-label fw-bold small text-muted text-uppercase" style={{ letterSpacing: '0.1em' }}>Brand</label>
                     <input
                       type="text"
-                      className="form-control rounded-3 py-2 px-3 border-secondary-subtle shadow-none"
+                      className="form-control rounded-3 py-3 px-3 border-light-subtle shadow-none"
                       name="brand"
                       value={updateProduct.brand}
                       onChange={handleChange}
@@ -118,23 +118,23 @@ const UpdateProduct = () => {
                     />
                   </div>
                   <div className="col-12">
-                    <label className="form-label fw-bold small text-muted text-uppercase">Description</label>
+                    <label className="form-label fw-bold small text-muted text-uppercase" style={{ letterSpacing: '0.1em' }}>Description</label>
                     <textarea
-                      className="form-control rounded-3 py-2 px-3 border-secondary-subtle shadow-none"
+                      className="form-control rounded-3 py-3 px-3 border-light-subtle shadow-none"
                       name="description"
                       value={updateProduct.description}
                       onChange={handleChange}
-                      rows="3"
+                      rows="4"
                       required
                     ></textarea>
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label fw-bold small text-muted text-uppercase">Price (₹)</label>
+                    <label className="form-label fw-bold small text-muted text-uppercase" style={{ letterSpacing: '0.1em' }}>Price (INR)</label>
                     <div className="input-group">
-                      <span className="input-group-text bg-light border-secondary-subtle rounded-start-3">₹</span>
+                      <span className="input-group-text bg-white border-light-subtle rounded-start-3 fw-bold">₹</span>
                       <input
                         type="number"
-                        className="form-control border-secondary-subtle shadow-none rounded-end-3"
+                        className="form-control border-light-subtle shadow-none rounded-end-3 py-3"
                         name="price"
                         value={updateProduct.price}
                         onChange={handleChange}
@@ -143,9 +143,9 @@ const UpdateProduct = () => {
                     </div>
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label fw-bold small text-muted text-uppercase">Category</label>
+                    <label className="form-label fw-bold small text-muted text-uppercase" style={{ letterSpacing: '0.1em' }}>Category</label>
                     <select
-                      className="form-select rounded-3 py-2 px-3 border-secondary-subtle shadow-none"
+                      className="form-select rounded-3 py-3 px-3 border-light-subtle shadow-none"
                       name="category"
                       value={updateProduct.category}
                       onChange={handleChange}
@@ -162,10 +162,10 @@ const UpdateProduct = () => {
                   </div>
 
                   <div className="col-md-6">
-                    <label className="form-label fw-bold small text-muted text-uppercase">Stock Quantity</label>
+                    <label className="form-label fw-bold small text-muted text-uppercase" style={{ letterSpacing: '0.1em' }}>Inventory</label>
                     <input
                       type="number"
-                      className="form-control rounded-3 py-2 px-3 border-secondary-subtle shadow-none"
+                      className="form-control rounded-3 py-3 px-3 border-light-subtle shadow-none"
                       name="stockQuantity"
                       value={updateProduct.stockQuantity}
                       onChange={handleChange}
@@ -173,10 +173,10 @@ const UpdateProduct = () => {
                     />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label fw-bold small text-muted text-uppercase">Release Date</label>
+                    <label className="form-label fw-bold small text-muted text-uppercase" style={{ letterSpacing: '0.1em' }}>Availability Date</label>
                     <input
                       type="date"
-                      className="form-control rounded-3 py-2 px-3 border-secondary-subtle shadow-none"
+                      className="form-control rounded-3 py-3 px-3 border-light-subtle shadow-none"
                       name="releaseDate"
                       value={updateProduct.releaseDate}
                       onChange={handleChange}
@@ -185,32 +185,33 @@ const UpdateProduct = () => {
                   </div>
 
                   <div className="col-12">
-                    <label className="form-label fw-bold small text-muted text-uppercase">Product Image</label>
-                    <div className="d-flex flex-column align-items-center p-4 border-2 border-dashed border-secondary-subtle bg-light rounded-3 text-center position-relative">
+                    <label className="form-label fw-bold small text-muted text-uppercase" style={{ letterSpacing: '0.1em' }}>Product Visualization</label>
+                    <div className="d-flex flex-column align-items-center p-5 border-2 border-dashed rounded-4 text-center transition-all position-relative" style={{ borderColor: '#e5e5e5', backgroundColor: '#fafafa' }}>
                       {previewUrl ? (
                         <div className="preview-container w-100 position-relative">
-                          <img src={previewUrl} alt="Preview" style={{ maxHeight: '200px', borderRadius: '8px' }} />
-                          <div className="mt-2 small text-muted">Click image to change</div>
+                          <img src={previewUrl} alt="Preview" style={{ maxHeight: '240px', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }} />
+                          <div className="mt-3 small fw-bold text-dark">Click image to replace</div>
                         </div>
                       ) : (
-                        <div className="upload-placeholder">
-                          <i className="bi bi-image d-block fs-1 opacity-25 mb-2"></i>
-                          <p className="mb-0 small fw-medium">No image available</p>
+                        <div className="upload-placeholder py-4">
+                          <i className="bi bi-image d-block fs-1 mb-3 text-dark"></i>
+                          <p className="mb-1 fw-bold text-dark">No image selected</p>
+                          <p className="smaller text-muted">Click to select product image</p>
                         </div>
                       )}
                       <input
-                        className="form-control position-absolute inset-0 opacity-0 cursor-pointer"
+                        className="form-control position-absolute inset-0 opacity-0 cursor-pointer w-100 h-100"
                         type="file"
                         onChange={handleImageChange}
-                        style={{ top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' }}
+                        style={{ top: 0, left: 0 }}
                       />
                     </div>
                   </div>
 
                   <div className="col-12 mt-4">
-                    <div className="form-check form-switch p-0 d-flex align-items-center gap-3">
+                    <div className="form-check form-switch p-1 d-flex align-items-center gap-3">
                       <input
-                        className="form-check-input mt-0 ms-0"
+                        className="form-check-input mt-0 ms-0 shadow-none"
                         type="checkbox"
                         role="switch"
                         id="availabilitySwitch"
@@ -218,10 +219,10 @@ const UpdateProduct = () => {
                         onChange={(e) =>
                           setUpdateProduct({ ...updateProduct, productAvailable: e.target.checked })
                         }
-                        style={{ width: '45px', height: '22px' }}
+                        style={{ width: '48px', height: '24px' }}
                       />
-                      <label className="form-check-label fw-bold" htmlFor="availabilitySwitch">
-                        Mark as Available for Customers
+                      <label className="form-check-label fw-bold text-dark" htmlFor="availabilitySwitch">
+                        Available for public viewing
                       </label>
                     </div>
                   </div>
@@ -230,14 +231,13 @@ const UpdateProduct = () => {
                     <div className="d-flex gap-3">
                       <button
                         type="submit"
-                        className="btn btn-dark flex-grow-1 py-3 fw-bold rounded-3 shadow-sm border-0"
-                        style={{ backgroundColor: 'var(--accent-color)', color: '#ffffff' }}
+                        className="startup-btn-primary flex-grow-1 justify-content-center py-3"
                       >
-                        Update Product
+                        Save Changes
                       </button>
                       <button
                         type="button"
-                        className="btn btn-light py-3 px-4 fw-bold rounded-3"
+                        className="startup-btn-outline py-3 px-5"
                         onClick={() => navigate('/admin')}
                       >
                         Cancel
@@ -253,10 +253,10 @@ const UpdateProduct = () => {
       <style>{`
         .update-product-page .form-control:focus, 
         .update-product-page .form-select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.05);
+            border-color: #000 !important;
+            box-shadow: 0 0 0 1px #000 !important;
         }
-        .inset-0 { top: 0; left: 0; right: 0; bottom: 0; }
+        .fw-800 { font-weight: 800; }
         .cursor-pointer { cursor: pointer; }
       `}</style>
     </div>
