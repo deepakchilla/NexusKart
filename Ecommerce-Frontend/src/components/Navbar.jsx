@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import AppContext from "../Context/Context";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../axios";
+import axios, { API_BASE_URL } from "../axios";
 
 const Navbar = () => {
   const { cart, user, logout } = useContext(AppContext);
@@ -133,7 +133,7 @@ const Navbar = () => {
                         >
                           <div className="suggestion-icon">
                             <img
-                              src={`http://localhost:8085/api/product/${result.id}/image`}
+                              src={`${API_BASE_URL}/product/${result.id}/image`}
                               alt=""
                               onError={(e) => {
                                 e.target.onerror = null;

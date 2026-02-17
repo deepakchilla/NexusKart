@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
-import axios from "../axios";
+import axios, { API_BASE_URL } from "../axios";
 import AppContext from "../Context/Context";
 import unplugged from "../assets/unplugged.png";
 
@@ -234,7 +234,7 @@ const Home = () => {
                   <Link to={`/product/${product.id}`} className="text-decoration-none">
                     <div className="product-frame">
                       <img
-                        src={`http://localhost:8085/api/product/${product.id}/image`}
+                        src={`${API_BASE_URL}/product/${product.id}/image`}
                         alt={product.name}
                         className="product-image-main"
                         onError={(e) => {

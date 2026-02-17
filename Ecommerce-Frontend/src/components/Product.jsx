@@ -1,7 +1,7 @@
 import { useNavigate, useParams, Link } from "react-router-dom";
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../Context/Context";
-import axios from "../axios";
+import axios, { API_BASE_URL } from "../axios";
 
 const Product = () => {
   const { id } = useParams();
@@ -113,7 +113,7 @@ const Product = () => {
         {/* Left Column: Image */}
         <div className="product-image-viewer shadow-sm">
           <img
-            src={`http://localhost:8085/api/product/${product.id}/image`}
+            src={`${API_BASE_URL}/product/${product.id}/image`}
             alt={product.name}
             onError={(e) => {
               e.target.onerror = null;
