@@ -169,13 +169,13 @@ a {
   color: var(--navbar_text) !important;
 }
 
-.navbar a,
+/* .navbar a,
 .navbar span,
 .navbar li,
 .navbar i,
 .navbar button {
   color: var(--navbar_text) !important;
-}
+} */
 
 .navbar a:hover {
   color: var(--link_hover_color);

@@ -213,24 +213,34 @@ const Home = () => {
                         </div>
                       </Link>
 
-                      <div className="admin-actions mt-auto d-flex gap-2">
-                        <Link
-                          to={`/product/update/${id}`}
-                          className="btn btn-dark flex-grow-1 rounded-pill py-2 small fw-bold"
-                        >
-                          Edit
-                        </Link>
+                      {user?.role === 'ADMIN' ? (
+                        <div className="admin-actions mt-auto d-flex gap-2">
+                          <Link
+                            to={`/product/update/${id}`}
+                            className="btn btn-dark flex-grow-1 rounded-pill py-2 small fw-bold"
+                          >
+                            Edit
+                          </Link>
+                          <button
+                            className="btn btn-outline-danger rounded-circle p-2 d-flex align-items-center justify-content-center"
+                            style={{ width: '40px', height: '40px' }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              deleteProduct(id);
+                            }}
+                          >
+                            <i className="bi bi-trash3"></i>
+                          </button>
+                        </div>
+                      ) : (
                         <button
-                          className="btn btn-outline-danger rounded-circle p-2 d-flex align-items-center justify-content-center"
-                          style={{ width: '40px', height: '40px' }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            deleteProduct(id);
-                          }}
+                          className="add-to-cart-btn mt-auto"
+                          disabled={!productAvailable}
+                          onClick={() => addToCart(product)}
                         >
-                          <i className="bi bi-trash3"></i>
+                          {productAvailable ? 'Add to Cart' : 'Out of Stock'}
                         </button>
-                      </div>
+                      )}
                     </div>
                   );
                 })

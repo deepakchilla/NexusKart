@@ -151,7 +151,7 @@ const Navbar = () => {
             </form>
           </div>
 
-          <div className="d-flex align-items-center gap-3 gap-lg-4 ms-2">
+          <div className="d-flex align-items-center gap-3 gap-lg-4 ms-2 flex-shrink-0">
             {user ? (
               <div className="dropdown" onClick={(e) => e.stopPropagation()}>
                 <button
@@ -164,7 +164,7 @@ const Navbar = () => {
                   </div>
                   <div className="text-start d-none d-md-block">
                     <div className="text-muted" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '700' }}>MY PROFILE</div>
-                    <div className="fw-bold text-dark" style={{ fontSize: '14px', lineHeight: '1.2' }}>{user.name.split(' ')[0]}</div>
+                    <div className="fw-bold text-dark" style={{ fontSize: '14px', lineHeight: '1.2' }}>{user.name?.split(' ')[0] || 'User'}</div>
                   </div>
                 </button>
                 <ul className={`dropdown-menu shadow-lg border-0 mt-3 p-2 ${showUserDropdown ? 'show' : ''}`} style={{ borderRadius: '16px', minWidth: '220px', display: showUserDropdown ? 'block' : 'none', backgroundColor: '#ffffff', left: '50%', transform: 'translateX(-50%)', right: 'auto' }}>
@@ -187,8 +187,20 @@ const Navbar = () => {
                 </ul>
               </div>
             ) : (
-              <Link to="/login" className="btn btn-primary rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2" style={{ fontSize: '13px' }}>
-                <i className="bi bi-person-fill"></i>
+              <Link
+                to="/login"
+                className="btn btn-dark rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2"
+                style={{
+                  fontSize: '14px',
+                  backgroundColor: '#000000',
+                  color: '#ffffff',
+                  border: '1px solid #000000',
+                  padding: '10px 24px',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                <i className="bi bi-person-fill" style={{ color: '#ffffff' }}></i>
                 Sign In
               </Link>
             )}
