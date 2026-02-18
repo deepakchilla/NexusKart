@@ -33,6 +33,13 @@ public class User {
     private String name;
 
     private String role = "USER";
+    private String imageName;
+    private String imageType;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private byte[] imageDate;
 
     public void setRole(String role) {
         this.role = role != null ? role.toUpperCase() : "USER";

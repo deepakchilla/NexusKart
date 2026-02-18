@@ -2,9 +2,10 @@ import React, { useContext, useState } from "react";
 import AppContext from "../Context/Context";
 import axios from "../axios";
 import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../axios";
 
 const Profile = () => {
-    const { user, updateUser } = useContext(AppContext);
+    const { user, updateUser, imageTimestamp, refreshImage } = useContext(AppContext);
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         name: user?.name || "",
@@ -27,6 +28,58 @@ const Profile = () => {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("imageFile", file);
+
+        setLoading(true);
+        setStatus({ type: "", message: "" });
+
+        try {
+            console.log("Starting image upload for user:", user.id);
+            const response = await axios.post(`/users/${user.id}/image`, formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+            console.log("Upload successful:", response.data);
+            refreshImage();
+            setStatus({ type: "success", message: "Profile picture updated!" });
+        } catch (error) {
+            console.error("❌ PROFILE IMAGE UPLOAD FAILED");
+            if (error.response) {
+                // The server responded with a status code outside the 2xx range
+                console.error("Status Code:", error.response.status);
+                console.error("Server Message Data:", error.response.data);
+
+                let errorMsg = "Internal Server Error";
+                if (typeof error.response.data === 'string') {
+                    errorMsg = error.response.data;
+                } else if (error.response.data && error.response.data.message) {
+                    errorMsg = error.response.data.message;
+                } else if (error.response.data && error.response.data.error) {
+                    errorMsg = error.response.data.error;
+                }
+
+                setStatus({
+                    type: "danger",
+                    message: `Upload failed (${error.response.status}): ${errorMsg}`
+                });
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error("No response received from server");
+                setStatus({ type: "danger", message: "No response from server. Check your connection." });
+            } else {
+                // Something happened in setting up the request
+                console.error("Request Error:", error.message);
+                setStatus({ type: "danger", message: "Error setting up upload request." });
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -82,16 +135,44 @@ const Profile = () => {
                                     {/* Sidebar Info */}
                                     <div className="col-md-4 text-center border-end">
                                         <div className="position-relative d-inline-block mb-4">
-                                            <div className="rounded-circle d-flex align-items-center justify-content-center shadow-sm"
-                                                style={{
-                                                    width: '140px',
-                                                    height: '140px',
-                                                    fontSize: '56px',
-                                                    fontWeight: '700',
-                                                    color: 'white',
-                                                    background: 'var(--text-primary)'
-                                                }}>
-                                                {user.name?.charAt(0).toUpperCase() || 'U'}
+                                            <div className="profile-avatar-container">
+                                                <div className="rounded-circle d-flex align-items-center justify-content-center shadow-sm overflow-hidden border border-4 border-white"
+                                                    style={{
+                                                        width: '140px',
+                                                        height: '140px',
+                                                        fontSize: '56px',
+                                                        fontWeight: '700',
+                                                        color: 'white',
+                                                        background: 'var(--text-primary)'
+                                                    }}>
+                                                    <img
+                                                        src={`${API_BASE_URL}/users/${user.id}/image?t=${imageTimestamp}`}
+                                                        alt=""
+                                                        className="w-100 h-100 object-fit-cover"
+                                                        style={{ display: 'none' }}
+                                                        onLoad={(e) => {
+                                                            e.target.style.display = 'block';
+                                                            if (e.target.nextSibling) e.target.nextSibling.style.display = 'none';
+                                                        }}
+                                                        onError={(e) => {
+                                                            e.target.style.display = 'none';
+                                                            if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                                                        }}
+                                                    />
+                                                    <div className="initial-placeholder w-100 h-100 d-flex align-items-center justify-content-center">
+                                                        {user.name?.charAt(0).toUpperCase() || 'U'}
+                                                    </div>
+                                                </div>
+                                                <label htmlFor="avatar-upload" className="avatar-edit-btn position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center bg-white shadow border rounded-circle cursor-pointer transition-all" style={{ width: '40px', height: '40px', zIndex: 2 }}>
+                                                    <i className="bi bi-camera-fill text-dark fs-6"></i>
+                                                    <input
+                                                        type="file"
+                                                        id="avatar-upload"
+                                                        className="d-none"
+                                                        accept="image/*"
+                                                        onChange={handleImageUpload}
+                                                    />
+                                                </label>
                                             </div>
                                         </div>
                                         <h4 className="fw-bold mb-1">{user.name}</h4>
@@ -256,6 +337,22 @@ const Profile = () => {
                 }
                 .card {
                     transition: transform 0.3s ease;
+                }
+                .avatar-edit-btn:hover {
+                    background: #f8f9fa !important;
+                    transform: scale(1.1);
+                }
+                .avatar-edit-btn {
+                    transition: all 0.3s ease;
+                }
+                .btn-outline-dark {
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                .btn-outline-dark i {
+                    transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                .btn-outline-dark:hover i {
+                    color: white !important;
                 }
             `}</style>
         </div>

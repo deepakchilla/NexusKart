@@ -20,8 +20,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", "An unexpected error occurred");
-        body.put("details", ex.getMessage());
+        body.put("message", ex.getMessage() != null ? ex.getMessage() : "An unexpected error occurred");
+        body.put("details", ex.getClass().getName());
         body.put("path", request.getDescription(false));
 
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);

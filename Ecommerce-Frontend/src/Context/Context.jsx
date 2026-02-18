@@ -45,6 +45,11 @@ export const AppProvider = ({ children }) => {
   };
 
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+  const [imageTimestamp, setImageTimestamp] = useState(Date.now());
+
+  const refreshImage = () => {
+    setImageTimestamp(Date.now());
+  };
 
   const login = (userData) => {
     setUser(userData);
@@ -84,7 +89,10 @@ export const AppProvider = ({ children }) => {
   }, [cart]);
 
   return (
-    <AppContext.Provider value={{ data, isError, cart, addToCart, removeFromCart, refreshData, clearCart, user, login, logout, updateUser }}>
+    <AppContext.Provider value={{
+      data, isError, cart, addToCart, removeFromCart, refreshData, clearCart,
+      user, login, logout, updateUser, imageTimestamp, refreshImage
+    }}>
       {children}
     </AppContext.Provider>
   );

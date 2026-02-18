@@ -282,7 +282,7 @@ const Product = () => {
                     disabled={!product.productAvailable}
                     onClick={handleAddToCart}
                   >
-                    <i className="bi bi-bag-plus me-2"></i> Add to Cart
+                    <i className="bi bi-cart-plus me-2"></i> Add to Cart
                   </button>
                   <button
                     className="startup-btn-outline w-100 justify-content-center py-3"

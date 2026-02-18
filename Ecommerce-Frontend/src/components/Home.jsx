@@ -171,7 +171,7 @@ const Home = () => {
             <div className="mt-5 p-4 bg-black text-white rounded-0 shadow-lg mini-banner" style={{ border: '1px solid #333' }}>
               <h6 className="fw-bold mb-3 text-white" style={{ fontSize: '18px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Nexus Pro</h6>
               <p className="small text-white mb-4" style={{ lineHeight: '1.6' }}>Get early access to exclusive tech drops and 15% off your first purchase.</p>
-              <Link to="/signup" className="btn btn-light btn-sm w-100 fw-bold rounded-0 py-2 text-uppercase" style={{ letterSpacing: '0.1em', fontSize: '12px' }}>Upgrade Now</Link>
+              <Link to="/membership" className="btn btn-light btn-sm w-100 fw-bold rounded-0 py-2 text-uppercase" style={{ letterSpacing: '0.1em', fontSize: '12px' }}>Upgrade Now</Link>
             </div>
           </div>
         </aside>
@@ -266,29 +266,33 @@ const Home = () => {
                       {!product.productAvailable && <span className="position-absolute top-0 start-0 m-3 badge bg-dark opacity-75">Out of Stock</span>}
                       {product.price < 5000 && <span className="position-absolute top-0 end-0 m-3 badge bg-white text-dark shadow-sm">Deal</span>}
 
-                      <div className="action-overlay">
-                        {user?.role === 'ADMIN' ? (
+                      {user?.role === 'ADMIN' && (
+                        <div className="action-overlay">
                           <div className="d-flex gap-2">
                             <Link to={`/product/update/${product.id}`} className="btn btn-white btn-sm rounded-circle shadow p-2"><i className="bi bi-pencil"></i></Link>
                             <button onClick={(e) => { e.preventDefault(); deleteProduct(product.id); }} className="btn btn-white btn-sm rounded-circle shadow p-2 text-danger"><i className="bi bi-trash"></i></button>
                           </div>
-                        ) : (
-                          <button
-                            className="btn btn-dark btn-sm rounded-circle shadow p-2"
-                            disabled={!product.productAvailable}
-                            onClick={(e) => { e.preventDefault(); addToCart(product); }}
-                          >
-                            <i className="bi bi-plus-lg"></i>
-                          </button>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   </Link>
 
                   <div className="product-meta">
                     <span className="product-cat-label">{product.brand || product.category}</span>
                     <Link to={`/product/${product.id}`} className="product-name-link">{product.name}</Link>
-                    <div className="product-price-tag">₹{product.price.toLocaleString()}</div>
+                    <div className="product-price-tag mb-3">₹{product.price.toLocaleString()}</div>
+                    <div className="d-flex flex-column gap-2">
+                      <Link to={`/product/${product.id}`} className="view-product-btn text-decoration-none">
+                        View Product
+                      </Link>
+                      <button
+                        className="home-add-to-cart-btn"
+                        disabled={!product.productAvailable}
+                        onClick={() => addToCart(product)}
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))

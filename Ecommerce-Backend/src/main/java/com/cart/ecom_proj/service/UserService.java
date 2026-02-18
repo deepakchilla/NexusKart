@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -39,5 +42,18 @@ public class UserService {
             }
             return repo.save(user);
         }).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Transactional
+    public User updateProfilePicture(Long id, MultipartFile imageFile) throws IOException {
+        User user = repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setImageName(imageFile.getOriginalFilename());
+        user.setImageType(imageFile.getContentType());
+        user.setImageDate(imageFile.getBytes());
+        return repo.save(user);
+    }
+
+    public User getById(Long id) {
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

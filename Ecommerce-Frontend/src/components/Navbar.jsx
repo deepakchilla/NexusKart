@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios, { API_BASE_URL } from "../axios";
 
 const Navbar = () => {
-  const { cart, user, logout } = useContext(AppContext);
+  const { cart, user, logout, imageTimestamp } = useContext(AppContext);
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const navigate = useNavigate();
 
@@ -186,24 +186,61 @@ const Navbar = () => {
                       <div className="fw-bold text-dark" style={{ fontSize: '14px' }}>{user.name?.split(' ')[0] || 'Member'}</div>
                       <div className="text-muted" style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase' }}>{user.role}</div>
                     </div>
-                    <div className="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style={{ width: '40px', height: '40px', fontSize: '14px', border: '2px solid #fff', boxShadow: '0 0 0 1px #eee' }}>
-                      {user.name?.charAt(0).toUpperCase()}
+                    <div className="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold overflow-hidden position-relative" style={{ width: '40px', height: '40px', fontSize: '14px', border: '2px solid #fff', boxShadow: '0 0 0 1px #eee' }}>
+                      <span className="position-absolute">{user.name?.charAt(0).toUpperCase()}</span>
+                      <img
+                        src={`${API_BASE_URL}/users/${user.id}/image?t=${imageTimestamp}`}
+                        alt=""
+                        className="w-100 h-100 object-fit-cover position-relative"
+                        style={{ zIndex: 1, display: 'none' }}
+                        onLoad={(e) => {
+                          e.target.style.display = 'block';
+                          if (e.target.previousSibling) e.target.previousSibling.style.display = 'none';
+                        }}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          if (e.target.previousSibling) e.target.previousSibling.style.display = 'block';
+                        }}
+                      />
                     </div>
                   </button>
-                  <ul className={`dropdown-menu dropdown-menu-end shadow-2xl border-0 mt-3 p-2 ${showUserDropdown ? 'show' : ''}`} style={{ borderRadius: '20px', minWidth: '240px', display: showUserDropdown ? 'block' : 'none' }}>
+                  <ul
+                    className={`dropdown-menu dropdown-menu-end shadow-2xl border-0 p-2 ${showUserDropdown ? 'show' : ''}`}
+                    style={{
+                      borderRadius: '24px',
+                      minWidth: '260px',
+                      display: showUserDropdown ? 'block' : 'none',
+                      right: 0,
+                      marginTop: '15px',
+                      transformOrigin: 'top right',
+                      animation: 'slideDownIn 0.3s cubic-bezier(0.2, 1, 0.2, 1)'
+                    }}
+                  >
                     <li className="px-3 py-3 mb-2 border-bottom">
                       <div className="fw-bold text-dark">{user.name}</div>
                       <div className="small text-muted">{user.email || 'Verified Member'}</div>
                     </li>
-                    <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold" to="/profile" onClick={() => setShowUserDropdown(false)}><i className="bi bi-gear me-2"></i> Settings</Link></li>
+                    <li>
+                      <Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold d-flex align-items-center gap-2" to="/profile" onClick={() => setShowUserDropdown(false)}>
+                        <i className="bi bi-person-circle fs-6 opacity-75"></i> Your Account
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold d-flex align-items-center gap-2" to={user.role === 'ADMIN' ? "/admin/orders" : "/orders"} onClick={() => setShowUserDropdown(false)}>
+                        <i className="bi bi-box-seam fs-6 opacity-75"></i> Your Orders
+                      </Link>
+                    </li>
                     {user.role === 'ADMIN' && (
-                      <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold text-primary" to="/admin" onClick={() => setShowUserDropdown(false)}><i className="bi bi-cpu me-2"></i> Admin Panel</Link></li>
+                      <li className="mt-2 border-top pt-2">
+                        <Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold text-primary d-flex align-items-center gap-2" to="/admin" onClick={() => setShowUserDropdown(false)}>
+                          <i className="bi bi-cpu fs-6"></i> Admin Panel
+                        </Link>
+                      </li>
                     )}
-                    <li><Link className="dropdown-item rounded-3 py-2 px-3 small mb-1 fw-bold" to={user.role === 'ADMIN' ? "/admin/orders" : "/orders"} onClick={() => setShowUserDropdown(false)}><i className="bi bi-box-seam me-2"></i> Orders</Link></li>
                     <li><hr className="dropdown-divider opacity-10 mx-2 my-2" /></li>
                     <li>
                       <button className="dropdown-item rounded-3 py-2 px-3 small text-danger fw-bold d-flex align-items-center gap-2" onClick={() => { logout(); setShowUserDropdown(false); }}>
-                        <i className="bi bi-power"></i> Sign Out
+                        <i className="bi bi-power fs-6"></i> Sign Out
                       </button>
                     </li>
                   </ul>
@@ -211,7 +248,7 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="startup-btn-primary py-2 px-3 px-md-4 shadow-none d-none d-sm-block"
+                  className="startup-btn-primary text-decoration-none py-2 px-3 px-md-4 shadow-none d-none d-sm-block"
                   style={{ fontSize: '13px' }}
                 >
                   Sign In
@@ -220,7 +257,7 @@ const Navbar = () => {
 
               {user?.role !== 'ADMIN' && (
                 <Link to="/cart" className="text-decoration-none d-flex align-items-center position-relative" style={{ color: 'var(--text-primary)' }}>
-                  <i className="bi bi-handbag fs-4"></i>
+                  <i className="bi bi-cart3 fs-4"></i>
                   {totalItems > 0 && (
                     <span className="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-dark" style={{ fontSize: '9px', minWidth: '18px', height: '18px', border: '2px solid #fff' }}>
                       {totalItems}
@@ -265,7 +302,7 @@ const Navbar = () => {
         <div className="drawer-body p-4">
           {!user && (
             <div className="mb-4 d-sm-none">
-              <Link to="/login" className="btn btn-dark w-100 rounded-pill py-2 fw-bold" onClick={() => setIsMobileMenuOpen(false)}>Sign In</Link>
+              <Link to="/login" className="btn btn-dark text-decoration-none w-100 rounded-pill py-2 fw-bold" onClick={() => setIsMobileMenuOpen(false)}>Sign In</Link>
             </div>
           )}
           <h6 className="text-uppercase smaller text-muted fw-bold tracking-widest mb-3" style={{ fontSize: '10px' }}>Categories</h6>

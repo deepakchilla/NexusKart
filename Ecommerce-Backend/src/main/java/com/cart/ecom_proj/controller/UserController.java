@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -52,11 +51,6 @@ public class UserController {
             user.setRole("USER");
         }
 
-        // The service.register(user) will implicitly trigger validation if we added
-        // @Valid here,
-        // but since we are manually building the User object, we'll manually check or
-        // refactor later.
-        // For now, let's keep it simple.
         return new ResponseEntity<>(service.register(user), HttpStatus.CREATED);
     }
 
