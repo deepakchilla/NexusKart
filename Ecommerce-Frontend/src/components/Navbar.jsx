@@ -187,7 +187,7 @@ const Navbar = () => {
                       <div className="text-muted" style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase' }}>{user.role}</div>
                     </div>
                     <div className="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold overflow-hidden position-relative" style={{ width: '40px', height: '40px', fontSize: '14px', border: '2px solid #fff', boxShadow: '0 0 0 1px #eee' }}>
-                      <span className="position-absolute">{user.name?.charAt(0).toUpperCase()}</span>
+                      <span className="position-absolute" style={{ color: '#ffffff' }}>{user.name?.charAt(0).toUpperCase()}</span>
                       <img
                         src={`${API_BASE_URL}/users/${user.id}/image?t=${imageTimestamp}`}
                         alt=""
