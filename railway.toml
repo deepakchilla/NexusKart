@@ -1,4 +1,0 @@
-[build]
-builder = "NIXPACKS"
-rootDirectory = "Ecommerce-Backend"
-watchPatterns = ["Ecommerce-Backend/**"]
